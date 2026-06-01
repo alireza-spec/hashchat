@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Link, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import io from 'socket.io-client';
@@ -84,6 +84,7 @@ function Register({ onRegister }) {
   );
 }
 
+
 // Sidebar Component
 function Sidebar({ user, onLogout }) {
   const navigate = useNavigate();
@@ -130,13 +131,14 @@ function ChatList({ token, logout }) {
   const [activeTab, setActiveTab] = useState('all');
   const navigate = useNavigate();
 
+
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('hashchat_user') || '{}');
     setUser(userData);
     loadChats();
     
     socket.emit('join', userData.id);
-    socket.on('new-message', (msg) => {
+    socket.on('new-message', () => {
       loadChats();
     });
     
@@ -144,6 +146,7 @@ function ChatList({ token, logout }) {
       socket.off('new-message');
     };
   }, []);
+
 
   const loadChats = async () => {
     try {
@@ -155,6 +158,7 @@ function ChatList({ token, logout }) {
   };
 
   const filteredChats = activeTab === 'all' ? chats : chats.filter(c => c.type === activeTab);
+
 
   return (
     <div className="app">
@@ -181,7 +185,7 @@ function ChatList({ token, logout }) {
               <p>برای شروع یک چت جدید بسازید</p>
             </div>
           ) : (
-            filteredChat.map(chat => (
+            filteredChats.map(chat => (
               <div key={chat.id} className="chat-item" onClick={() => navigate(`/chat/${chat.id}`)}>
                 <div className="chat-avatar">{chat.title ? chat.title[0] : '?'}</div>
                 <div className="chat-info">
@@ -208,7 +212,7 @@ function ChatRoom({ token }) {
   const [input, setInput] = useState('');
   const [chat, setChat] = useState(null);
   const [user, setUser] = useState(null);
-  const messagesEndRef = React.useRef(null);
+  const messagesEndRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -232,7 +236,7 @@ function ChatRoom({ token }) {
 
   const loadChat = async () => {
     try {
-      const res = await API.get(`/api/chats`);
+      const res = await API.get('/api/chats');
       const found = res.data.find(c => c.id == id);
       setChat(found);
     } catch (err) {
@@ -311,7 +315,6 @@ function Settings({ token }) {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('hashchat_user') || '{}');
     setUser(userData);
@@ -322,6 +325,7 @@ function Settings({ token }) {
     localStorage.removeItem('hashchat_user');
     window.location.href = '/login';
   };
+
 
   return (
     <div className="app">
