@@ -1,0 +1,15 @@
+{
+  "name": "hashchat",
+  "version": "1.0.0",
+  "description": "پیام‌رسان مشابه تلگرام",
+  "scripts": {
+    "server": "cd server && node index.js",
+    "client": "cd client && npm start",
+    "dev": "concurrently \\"npm run server\\" \\"npm run client\\"",
+    "build": "cd client && npm run build",
+    "start": "NODE_ENV=production node server/index.js"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.0"
+  }
+}

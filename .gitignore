@@ -1,0 +1,10 @@
+node_modules/
+dist/
+build/
+.env
+*.log
+hashchat.db
+hashchat.db-shm
+hashchat.db-wal
+uploads/
+.DS_Store
